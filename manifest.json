@@ -1,0 +1,12 @@
+{
+    "manifest_version": 2,
+
+    "name": "The LANguage App",
+    "description": "A browser extension that allows people to learn vocabulary in a different language using fun quizzes.",
+    "version": "0.0.1",
+
+    "browser_action": {
+        "default_icon": "icon.png",
+        "default_popup": "popup.html"
+    }
+}
