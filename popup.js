@@ -23,7 +23,7 @@ document.getElementById('get-translations').onclick = function() {
 };
 
 // update click counter when extension loads
-updateClicks(JSON.parse(localStorage.getItem('clicks')));
+updateClicks(JSON.parse(localStorage.getItem('clicks')) || 0);
 
 document.getElementById('click').onclick = function() {
     // update number of clicks in local storage

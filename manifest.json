@@ -11,6 +11,6 @@
     },
 
     "permissions": [
-        "http://deu.hablaa.com/hs/translation/"
+        "http://deu.hablaa.com/hs/translation/*/eng-deu/"
     ]
 }
