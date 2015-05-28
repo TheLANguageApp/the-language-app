@@ -1,11 +1,11 @@
-Quiz Format:
+﻿Quiz Format:
 
 Scenario: Pre-Action (Template)
 
 "Please select the correct German"
 "Translation of " + " + word + "
-" Bitte w�hlen Sie den richtigen deutschen "
-" Die �bersetzung von " + " + word + "
+" Bitte wählen Sie die richtige deutsche "
+" Die Übersetzung von " + " + word + "
 
 	Code: (pre-picked)
 
