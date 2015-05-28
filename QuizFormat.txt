@@ -4,8 +4,8 @@ Scenario: Pre-Action (Template)
 
 "Please select the correct German"
 "Translation of " + " + word + "
-" Bitte wählen Sie den richtigen deutschen "
-" Die Übersetzung von " + " + Wort +"
+" Bitte wï¿½hlen Sie den richtigen deutschen "
+" Die ï¿½bersetzung von " + " + word + "
 
 	Code: (pre-picked)
 
@@ -29,7 +29,7 @@ Scenario: Pre-Action (Template)
 			j--
 		}
 	}
-	
+
 ------------------------------------------------------
 	Code: (picked)
 
@@ -64,5 +64,3 @@ Scenario: Correct choice
 
 pickedWord
 pickedWord->getTranslation() + !
-
-
