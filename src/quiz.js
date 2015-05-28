@@ -94,10 +94,17 @@ function highlightQuizCandidates(numQuizzes) {
 
                         var element = document.createElement('span');
                         element.innerHTML = word;
-                        element.className = 'quiz';
-                        element.onclick = function() {
-                            alert('foo');
-                        };
+                        element.classList.add('quiz');
+                        element.onclick = (function(word, element) {
+                            return function (event) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                //startQuiz(word);
+                                alert(word);
+                                element.classList.remove('quiz');
+                                element.onclick = function() {};
+                            };
+                        })(word, element);
                         candidate.parentNode.insertBefore(element, after);
 
                         finishedWords.push(translation);
