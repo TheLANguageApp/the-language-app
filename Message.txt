@@ -1,0 +1,4 @@
+Message: Is there a way to check if a selected item
+corresponds to a hyperlink? Because if there is you
+can probably implement a way around initiating a quiz
+on them w/o swapping pages.
