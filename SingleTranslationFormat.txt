@@ -1,0 +1,13 @@
+Single Translation:
+
+context menu
+	> options "Translate to German using LANguage"
+
+Code:
+// set up contextMenu options
+	
+function selection(info)// function handleContext(info){
+	if(info.selectionText){
+		// display selectedWord->getTranslation()
+	}
+}

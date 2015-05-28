@@ -1,0 +1,68 @@
+Quiz Format:
+
+Scenario: Pre-Action (Template)
+
+"Please select the correct German"
+"Translation of " + " + word + "
+" Bitte wählen Sie den richtigen deutschen "
+" Die Übersetzung von " + " + Wort +"
+
+	Code: (pre-picked)
+
+	// INITIALIZER ONLY FOR FIRST ITERATION
+	if(selectedWords.size == 5)
+	{
+		for(int i = 0; i <= 6; i++)
+		{
+		// random pick of 5 words from selectedWords[]
+		// place picked 5 words into quizWords[]
+			> default all 5 to incorrect
+		}
+		// randomly pick 1 of the 5 words
+			> change default to correct
+	}
+	else{
+		int j = selectedWords.size
+		while(j != 0)
+		{
+			// display element selectedWords[j]
+			j--
+		}
+	}
+	
+------------------------------------------------------
+	Code: (picked)
+
+	// bold selected HTML element amoung choices
+	// call correct/incorrect paradigm functions
+		> code will be associated correct/incorrect
+
+Scenario: Incorrect choice
+
+"Sorry, that was not correct"
+"Leider war das nicht rightig"
+
+pickedWord
+pickedWord->getTranslation()
+
+"But now you know that " + pickedWord
+"means " + pickedWord->getTranslation()
+"Try again!"
+"Aber jetzt wissen Sie, dass " + pickedWord
+pickedWord->getTranslation () + "bedeutet!"
+"Versuchen Sie es erneut!"
+------------------------------------------------------
+
+	Code:(continue)
+
+	// redirect-> Pre-Action(Template)
+
+Scenario: Correct choice
+
+"Correct!"
+"Richtig!"
+
+pickedWord
+pickedWord->getTranslation() + !
+
+
