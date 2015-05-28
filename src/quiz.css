@@ -3,3 +3,13 @@
     background: green;
     font-size: 150%;
 }
+
+.quiz-box {
+    background: gray;
+    width: 480px;
+    height: 300px;
+    z-index: 999;
+    position: fixed;
+    left: 0;
+    top: 0;
+}

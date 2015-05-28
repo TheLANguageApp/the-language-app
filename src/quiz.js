@@ -1,23 +1,21 @@
+var translations = {}; // cache all translations on this page
+
 // Get translation from the translation server, and call the callback with error if there was any and the translated word as the parameter.
 function getTranslation(word, callback) {
     // var request = new XMLHttpRequest();
     // request.onload = function() {
-    //     if (request.responseText.length == 0) {
+    //     if (request.status == 404) {
     //         callback(true, null);
     //     }
     //     else {
-    //         var word = JSON.parse(request.responseText[0].text);
-    //         callback(false, word);
+    //         var translation = JSON.parse(request.responseText)[0].text;
+    //         callback(false, translation);
+    //         translations[word] = translation;
     //     }
     // };
     // request.open('GET', 'http://deu.hablaa.com/hs/translation/' + word + '/eng-deu/', true);
     // request.send();
-    if (Math.random() < 0.5) {
-        callback(true, null);
-    }
-    else {
-        callback(false, word);
-    }
+    callback(false, word);
 }
 
 function getAnswersFromPage(numAnswers, callback) {
@@ -33,24 +31,28 @@ function getAnswersFromPage(numAnswers, callback) {
         }
     }
 
-    var translations = {};
+    var answers = {};
     var index = 0;
     var numTranslations = 0;
     function translateNextWord() {
         if (index == selectedWords.length || numTranslations == numAnswers) {
-            callback(translations);
+            callback(answers);
         }
         else {
             if (/^[a-zA-Z]+$/.test(words[index])) {
                 getTranslation(selectedWords[index], function(error, translation) {
                     if (!error) {
-                        translations[selectedWords[index]] = translation;
+                        answers[selectedWords[index]] = translation;
                         numTranslations++;
                     }
+                    index++;
+                    translateNextWord();
                 });
             }
-            index++;
-            translateNextWord();
+            else {
+                index++;
+                translateNextWord();
+            }
         }
     }
 
@@ -99,8 +101,7 @@ function highlightQuizCandidates(numQuizzes) {
                             return function (event) {
                                 event.preventDefault();
                                 event.stopPropagation();
-                                //startQuiz(word);
-                                alert(word);
+                                startQuiz(word);
                                 element.classList.remove('quiz');
                                 element.onclick = function() {};
                             };
@@ -108,51 +109,36 @@ function highlightQuizCandidates(numQuizzes) {
                         candidate.parentNode.insertBefore(element, after);
 
                         finishedWords.push(translation);
-                        console.log(translation);
+                        translations[word] = translation;
                     }
+                    translateOneQuiz();
                 });
+            }
+            else {
+                translateOneQuiz();
             }
 
             attempts++;
-            translateOneQuiz();
         }
     }
     translateOneQuiz();
 }
 
+function startQuiz(practiceWord) {
+    console.log(practiceWord);
+    var element = document.createElement('div');
+    element.classList.add('quiz-box');
+    document.body.appendChild(element);
+
+    element.innerHTML = 'Generating quiz...';
+
+    getAnswersFromPage(4, function(result) {
+        result[practiceWord] = translations[practiceWord];
+        element.innerHTML = '<p>What is the meaning of "' + practiceWord + '" in German?<p>';
+        for (var word in result) {
+            element.innerHTML += '<button onclick="alert(\'foo\')">' + result[word] + '</button>';
+        }
+    });
+}
+
 highlightQuizCandidates(5);
-
-getAnswersFromPage(4, function(result) {
-    console.log(result);
-});
-
-// for (var i = 0; i < NUM_ATTEMPTS; i++) {
-//     var translationCandidate = translationCandidates[Math.floor(Math.random()) * translationCandidates.length];
-//     getTranslation()
-// }
-//
-// var translations = {};
-// var numWords = 0;
-// (
-//     function getNextWord() {
-//         if (numWords == 25) {
-//             document.body.innerHTML = words.join(' ');
-//         }
-//         else {
-//             var index = Math.floor(Math.random() * words.length);
-//
-            // if (/^[a-zA-Z]+$/.test(words[index])) {
-            //     getTranslation(words[index], function(error, translation) {
-            //         if (!error) {
-            //             console.log(translation);
-            //             translations[words[index]] = translation;
-            //             words[index] = '<span class="quiz">' + words[index] + '</span>';
-            //             numWords++;
-            //         }
-            //     });
-            // }
-//
-//             getNextWord();
-//         }
-//     }
-// )();
