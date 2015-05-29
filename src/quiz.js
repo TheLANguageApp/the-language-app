@@ -1,4 +1,5 @@
 var translations = {}; // cache all translations on this page
+var remainingQuizzes; // number of remaining quizzes on page
 
 // Get translation from the translation server, and call the callback with error if there was any and the translated word as the parameter.
 function getTranslation(word, callback) {
@@ -79,7 +80,8 @@ function highlightQuizCandidates(numQuizzes) {
     var attempts = 0;
     function translateOneQuiz() {
         if (finishedWords.length == numQuizzes || attempts > 1000) {
-            return;
+            remainingQuizzes = numQuizzes;
+            chrome.runtime.sendMessage({ type: 'setBadgeText', text: numQuizzes + '' });
         }
         else {
             var candidate = translationCandidates[Math.floor(Math.random() * translationCandidates.length)];
@@ -134,10 +136,48 @@ function startQuiz(practiceWord) {
 
     getAnswersFromPage(4, function(result) {
         result[practiceWord] = translations[practiceWord];
-        element.innerHTML = '<p>What is the meaning of "' + practiceWord + '" in German?<p>';
+        element.innerHTML = '';
+
+        var prompt = document.createElement('p');
+        prompt.innerHTML = 'What is the meaning of "' + practiceWord + '" in german?';
+        element.appendChild(prompt);
+
+        var feedback = document.createElement('p');
+
         for (var word in result) {
-            element.innerHTML += '<button onclick="alert(\'foo\')">' + result[word] + '</button>';
+            var button = document.createElement('button');
+            button.innerHTML = result[word];
+            if (word == practiceWord) {
+                button.onclick = function(elt, btn) {
+                    return function() {
+                        elt.innerHTML = 'Congratulations, you got it right!';
+                        button.disabled = true;
+                        chrome.runtime.sendMessage({ type: 'incrementProgress' });
+                        remainingQuizzes--;
+                        chrome.runtime.sendMessage({ type: 'setBadgeText', text: remainingQuizzes + '' });
+                    }
+                }(feedback, button);
+            }
+            else {
+                button.onclick = function(elt, wrd, btn) {
+                    return function() {
+                        elt.innerHTML = 'That word means ' + wrd + ' in English.';
+                        btn.disabled = true;
+                    }
+                }(feedback, word, button);
+            }
+            element.appendChild(button);
         }
+
+        element.appendChild(feedback);
+
+        var close = document.createElement('button');
+        close.innerHTML = 'Close quiz';
+        close.onclick = function() {
+            document.body.removeChild(element);
+        };
+
+        element.appendChild(close);
     });
 }
 
