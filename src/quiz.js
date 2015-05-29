@@ -3,20 +3,19 @@ var remainingQuizzes; // number of remaining quizzes on page
 
 // Get translation from the translation server, and call the callback with error if there was any and the translated word as the parameter.
 function getTranslation(word, callback) {
-    // var request = new XMLHttpRequest();
-    // request.onload = function() {
-    //     if (request.status == 404) {
-    //         callback(true, null);
-    //     }
-    //     else {
-    //         var translation = JSON.parse(request.responseText)[0].text;
-    //         callback(false, translation);
-    //         translations[word] = translation;
-    //     }
-    // };
-    // request.open('GET', 'http://deu.hablaa.com/hs/translation/' + word + '/eng-deu/', true);
-    // request.send();
-    callback(false, word);
+    var request = new XMLHttpRequest();
+    request.onload = function() {
+        if (request.status == 404) {
+            callback(true, null);
+        }
+        else {
+            var translation = JSON.parse(request.responseText)[0].text;
+            callback(false, translation);
+            translations[word] = translation;
+        }
+    };
+    request.open('GET', 'http://deu.hablaa.com/hs/translation/' + word + '/eng-deu/', true);
+    request.send();
 }
 
 function getAnswersFromPage(numAnswers, callback) {
