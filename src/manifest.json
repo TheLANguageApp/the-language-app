@@ -6,7 +6,10 @@
     "version": "0.0.1",
 
     "background": {
-        "scripts": ["background.js"]
+        "scripts": [
+          "background.js",
+          "singleTranslation.js"
+          ]
     },
 
     "content_scripts": [
@@ -24,6 +27,7 @@
 
     "permissions": [
         "storage",
+        "contextMenus",
         "http://deu.hablaa.com/hs/translation/*/eng-deu/"
     ]
 }
