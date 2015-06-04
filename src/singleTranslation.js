@@ -8,7 +8,6 @@ function getTranslation(word, callback) {
         else {
             var translation = JSON.parse(request.responseText)[0].text;
             callback(false, translation);
-            //translations[word] = translation;
         }
     };
     request.open('GET', 'http://deu.hablaa.com/hs/translation/' + word + '/eng-deu/', true);
@@ -31,7 +30,6 @@ function onClickHandler(info, tab) {
   var sText = info.selectionText; // TEXT TO DO ACTION TO
   getTranslation(sText, function(error, translation){
     if (!error) {
-        window.alert(sText + " -> " + translation);
     }
   });
 
