@@ -69,13 +69,13 @@ function highlightQuizCandidates(numQuizzes) {
             results = []; // temp array to fill translationCandidates
             for (var node = root.firstChild; node != undefined; node = node.nextSibling) {
                 if (node.nodeType == 3) { // text node
-                    results.push(node);
+                    results.push(node); // adds the text node
                 }
                 else {
                     results = results.concat(searchForTextNodes(node)); // iterating recurse
                 }
             }
-            return results;
+            return results; // read through all of doc returns text from doc
         }
     )(document.body);
 
@@ -87,72 +87,87 @@ function highlightQuizCandidates(numQuizzes) {
             chrome.runtime.sendMessage({ type: 'setBadgeText', text: numQuizzes + '' });
         }
         else {
+            // randomly picked text node (body)
             var candidate = translationCandidates[Math.floor(Math.random() * translationCandidates.length)];
+            // collection of individual words
             var words = candidate.nodeValue.split(' ');
+            // randomly picked word
             var word = words[Math.floor(Math.random() * words.length)];
 
+            // 1st condition (RegExpression), 2nd ensure not simple word, 3rd ???
             if (/^[a-zA-Z]+$/.test(word) && word.length > 3 && finishedWords.indexOf(word) == -1) {
+                // Call fills translations[]
                 getTranslation(word, function(error, translation) {
                     if (!error) {
+                        // these variables allow the choosen word to be put back into the doc
+                        // middle represents the word, after represents the spot right after word
                         var middle = candidate.splitText(candidate.nodeValue.indexOf(word));
                         var after = middle.splitText(word.length);
 
-                        candidate.parentNode.removeChild(middle);
+                        candidate.parentNode.removeChild(middle); // word is removed to be quizzed
 
+                        // element is the highlighted word in doc
                         var element = document.createElement('span');
-                        element.innerHTML = word;
-                        element.classList.add('quiz');
+                        element.innerHTML = word; // selected quiz word (i.e. answer)
+                        element.classList.add('quiz'); // adds properties of quiz to element
+                        // onclick call initiates the whole quizing process (actual quiz is implemented elsewhere)
                         element.onclick = (function(word, element) {
                             return function (event) {
+                                // stops a previously clickable word to not function (for now)
                                 event.preventDefault();
+                                // stops the webpage from communicating it being clicked
                                 event.stopPropagation();
                                 startQuiz(word);
-                                element.classList.remove('quiz');
-                                element.onclick = function() {};
+                                element.classList.remove('quiz'); // quiz has ended so remove highlight
+                                element.onclick = function() {}; // return element (word) to former functionality
                             };
                         })(word, element);
                         candidate.parentNode.insertBefore(element, after);
 
-                        finishedWords.push(translation);
+                        finishedWords.push(translation); // stack of quizzed on words
                         translations[word] = translation;
                     }
-                    translateOneQuiz();
+                    translateOneQuiz(); // performs a quiz-prep
                 });
             }
             else {
-                translateOneQuiz();
+                translateOneQuiz(); // looks for another randomly viable word
             }
 
             attempts++;
         }
     }
-    translateOneQuiz();
+    translateOneQuiz(); // actual call to quiz-prep?
 }
 
+// practiceWord is just the highlighted word (i.e., the answer to the quiz)
 function startQuiz(practiceWord) {
     console.log(practiceWord);
-    var element = document.createElement('div');
+    var element = document.createElement('div'); // element is the quiz window
     element.classList.add('quiz-box');
     document.body.appendChild(element);
 
-    element.innerHTML = 'Generating quiz...';
+    element.innerHTML = 'Generating quiz...'; // prompt prior to fulfillment of start of quiz
 
     getAnswersFromPage(4, function(result) {
         result[practiceWord] = translations[practiceWord];
         element.innerHTML = '';
 
-        var prompt = document.createElement('p');
+        // <br /> is equivalent to new line
+        var prompt = document.createElement('p'); // prompt is a paragraph (<p> is paragraph tag)
         //prompt.innerHTML = 'What is the meaning of "' + practiceWord + '"<br /> in german?';
         prompt.innerHTML = 'Please select the correct German <br /> Translation of "' + practiceWord
               + '" <br /> Bitte wählen Sie die richtige deutsche'
               + '<br /> Die Übersetzung von "' + practiceWord + '"';
         element.appendChild(prompt);
 
-        var feedback = document.createElement('p');
+        var feedback = document.createElement('p'); // dynamic feedback (correct/incorrect)
 
         for (var word in result) {
             var button = document.createElement('button');
             button.innerHTML = result[word];
+            // correct choice for quiz
+            // elt is feedback
             if (word == practiceWord) {
                 button.onclick = function(elt, btn) {
                     return function() {
@@ -162,29 +177,32 @@ function startQuiz(practiceWord) {
                         remainingQuizzes--;
                         chrome.runtime.sendMessage({ type: 'setBadgeText', text: remainingQuizzes + '' });
                     }
-                }(feedback, button);
+                }(feedback, button); // calls itself immediately
             }
+            // incorrect choice in button
+            // elt is feedback
             else {
                 button.onclick = function(elt, wrd, btn) {
                     return function() {
                         elt.innerHTML = 'That word means ' + wrd + ' in English.';
                         btn.disabled = true;
                     }
-                }(feedback, word, button);
+                }(feedback, word, button); // calls itself immediately
             }
-            element.appendChild(button);
+            element.appendChild(button); // statement that adds all words to quiz (in/correct)
         }
 
-        element.appendChild(feedback);
+        element.appendChild(feedback); // adds the feedback prompt space to the quiz window
 
-        var close = document.createElement('button');
+        var close = document.createElement('button'); // create 'Close quiz' button
         close.innerHTML = 'Close quiz';
+        // onclick it close the quizWindow
         close.onclick = function() {
             document.body.removeChild(element);
         };
 
-        element.appendChild(close);
+        element.appendChild(close); // adds 'Close quiz' button to the quiz window
     });
 }
 
-highlightQuizCandidates(5);
+highlightQuizCandidates(5); // creates at most 5 quizzes
