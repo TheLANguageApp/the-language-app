@@ -26,9 +26,11 @@ function getAnswersFromPage(numAnswers, callback) {
 
     var selectedWords = [];
     var attempts = 0;
+    // fills selected answers with 15 words
     while (selectedWords.length < 15 && attempts < 1000) {
         attempts++;
         var newWord = words[Math.floor(Math.random() * words.length)];
+        // 1st condition (RegExpression), 2nd ensure not simple word, 3rd ???
         if (/^[a-zA-Z]+$/.test(newWord) && newWord.length > 3 && selectedWords.indexOf(newWord) == -1) {
             selectedWords.push(newWord);
         }
@@ -155,9 +157,8 @@ function startQuiz(practiceWord) {
 
         // <br /> is equivalent to new line
         var prompt = document.createElement('p'); // prompt is a paragraph (<p> is paragraph tag)
-        //prompt.innerHTML = 'What is the meaning of "' + practiceWord + '"<br /> in german?';
         prompt.innerHTML = 'Please select the correct German <br /> Translation of "' + practiceWord
-              + '" <br /> Bitte wählen Sie die richtige deutsche'
+              + '" <br /> <br /> Bitte wählen Sie die richtige deutsche'
               + '<br /> Die Übersetzung von "' + practiceWord + '"';
         element.appendChild(prompt);
 
@@ -167,27 +168,31 @@ function startQuiz(practiceWord) {
             var button = document.createElement('button');
             button.innerHTML = result[word];
             // correct choice for quiz
-            // elt is feedback
+            // elt is prompt
             if (word == practiceWord) {
                 button.onclick = function(elt, btn) {
                     return function() {
                         elt.innerHTML = 'Congratulations, you got it right!';
+                        elt2.innerHTML = "";
                         button.disabled = true;
                         chrome.runtime.sendMessage({ type: 'incrementProgress' });
                         remainingQuizzes--;
                         chrome.runtime.sendMessage({ type: 'setBadgeText', text: remainingQuizzes + '' });
                     }
-                }(feedback, button); // calls itself immediately
+                }(feedback, prompt, button); // calls itself immediately
             }
             // incorrect choice in button
-            // elt is feedback
+            // elt is feedback, elt2 is prompt
             else {
-                button.onclick = function(elt, wrd, btn) {
+                button.onclick = function(elt, elt2, wrd, btn) {
                     return function() {
-                        elt.innerHTML = 'That word means ' + wrd + ' in English.';
+                        elt.innerHTML = "But now you know that " + btn.innerHTML + " means " + wrd
+                            + "<br /> Try again!" + "<br /> <br /> Aber jetzt wissen Sie, dass " + btn.innerHTML
+                            + "<br/ >" + wrd + " bedeutet! <br /> Versuchen Sie es erneut!";
+                        elt2.innerHTML = "Sorry, that was not correct <br /> Leider war das nicht rightig";
                         btn.disabled = true;
                     }
-                }(feedback, word, button); // calls itself immediately
+                }(feedback, prompt, word, button); // calls itself immediately
             }
             element.appendChild(button); // statement that adds all words to quiz (in/correct)
         }
