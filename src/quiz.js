@@ -172,8 +172,8 @@ function startQuiz(practiceWord) {
             if (word == practiceWord) {
                 button.onclick = function(elt, elt2, btn) {
                     return function() {
-                        elt.innerHTML = 'Congratulations, you got it right!';
                         elt2.innerHTML = "";
+                        elt.innerHTML = 'Congratulations, you got it right!';
                         button.disabled = true;
                         chrome.runtime.sendMessage({ type: 'incrementProgress' });
                         remainingQuizzes--;
@@ -186,10 +186,10 @@ function startQuiz(practiceWord) {
             else {
                 button.onclick = function(elt, elt2, wrd, btn) {
                     return function() {
+                        elt2.innerHTML = "Sorry, that was not correct <br /> Leider war das nicht rightig";
                         elt.innerHTML = "But now you know that " + btn.innerHTML + " means " + wrd
                             + "<br /> Try again!" + "<br /> <br /> Aber jetzt wissen Sie, dass " + btn.innerHTML
                             + "<br/ >" + wrd + " bedeutet! <br /> Versuchen Sie es erneut!";
-                        elt2.innerHTML = "Sorry, that was not correct <br /> Leider war das nicht rightig";
                         btn.disabled = true;
                     }
                 }(feedback, prompt, word, button); // calls itself immediately
