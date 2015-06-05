@@ -138,7 +138,10 @@ function startQuiz(practiceWord) {
         element.innerHTML = '';
 
         var prompt = document.createElement('p');
-        prompt.innerHTML = 'What is the meaning of "' + practiceWord + '" in german?';
+        //prompt.innerHTML = 'What is the meaning of "' + practiceWord + '"<br /> in german?';
+        prompt.innerHTML = 'Please select the correct German <br /> Translation of "' + practiceWord
+              + '" <br /> Bitte wählen Sie die richtige deutsche'
+              + '<br /> Die Übersetzung von "' + practiceWord + '"';
         element.appendChild(prompt);
 
         var feedback = document.createElement('p');
