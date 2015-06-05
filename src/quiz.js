@@ -170,7 +170,7 @@ function startQuiz(practiceWord) {
             // correct choice for quiz
             // elt is prompt
             if (word == practiceWord) {
-                button.onclick = function(elt, btn) {
+                button.onclick = function(elt, elt2, btn) {
                     return function() {
                         elt.innerHTML = 'Congratulations, you got it right!';
                         elt2.innerHTML = "";
