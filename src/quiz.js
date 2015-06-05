@@ -159,7 +159,7 @@ function startQuiz(practiceWord) {
         var prompt = document.createElement('p'); // prompt is a paragraph (<p> is paragraph tag)
         prompt.innerHTML = 'Please select the correct German <br /> Translation of "' + practiceWord
               + '" <br /> <br /> Bitte wählen Sie die richtige deutsche'
-              + '<br /> Die Übersetzung von "' + practiceWord + '"';
+              + '<br /> Übersetzung von "' + practiceWord + '"';
         element.appendChild(prompt);
 
         var feedback = document.createElement('p'); // dynamic feedback (correct/incorrect)
