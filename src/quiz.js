@@ -1,7 +1,9 @@
+// Global Variables
 var translations = {}; // cache all translations on this page
 var remainingQuizzes; // number of remaining quizzes on page
 
 // Get translation from the translation server, and call the callback with error if there was any and the translated word as the parameter.
+// Called by getAnswersFromPage, *subFunct translateOneQuiz,
 function getTranslation(word, callback) {
     var request = new XMLHttpRequest();
     request.onload = function() {
@@ -18,6 +20,7 @@ function getTranslation(word, callback) {
     request.send();
 }
 
+// Called by startQuiz
 function getAnswersFromPage(numAnswers, callback) {
     var words = document.body.textContent.split(' ');
 
@@ -60,15 +63,16 @@ function getAnswersFromPage(numAnswers, callback) {
 }
 
 function highlightQuizCandidates(numQuizzes) {
+    // variable that represents text in the document
     var translationCandidates = (
         function searchForTextNodes(root) {
-            results = [];
+            results = []; // temp array to fill translationCandidates
             for (var node = root.firstChild; node != undefined; node = node.nextSibling) {
                 if (node.nodeType == 3) { // text node
                     results.push(node);
                 }
                 else {
-                    results = results.concat(searchForTextNodes(node));
+                    results = results.concat(searchForTextNodes(node)); // iterating recurse
                 }
             }
             return results;
