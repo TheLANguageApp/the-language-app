@@ -34,7 +34,4 @@ function onClickHandler(info, tab) {
         window.alert(sText + " -> " + translation);
     }
   });
-
-  //var url = "https://www.google.com/search?q=" + encodeURIComponent(sText);
-  //window.open(url, '_blank');
-};
+}
