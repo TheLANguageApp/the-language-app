@@ -28,7 +28,7 @@ chrome.contextMenus.onClicked.addListener(onClickHandler);
 
 // The onClicked callback function.
 function onClickHandler(info, tab) {
-  var sText = info.selectionText; // TEXT TO DO ACTION TO
+  var sText = info.selectionText; // sText is the selected word
   getTranslation(sText, function(error, translation){
     if (!error) {
         window.alert(sText + " -> " + translation);

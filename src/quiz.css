@@ -1,10 +1,10 @@
 p{
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, sans-serif;
-	font-size: 14px;
-	font-style: normal;
-	font-variant: normal;
-	font-weight: 400;
-	line-height: 20px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, sans-serif !important;
+	font-size: 14px            !important;
+	font-style: normal         !important;
+	font-variant: normal       !important;
+	font-weight: 400           !important;
+	line-height: 20px          !important;
 }
 
 .quiz {
@@ -14,7 +14,7 @@ p{
 }
 
 .quiz-box {
-    background: lightblue;
+    background: rgba(0,255,255,0.6);
     padding: 10px 40px;
     border: 2px solid black;
     border-radius: 25px;
