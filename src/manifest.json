@@ -31,8 +31,6 @@
     "permissions": [
         "storage",
         "contextMenus",
-        "http:/*/*",
-        "https:/*/*",
         "http://deu.hablaa.com/hs/translation/*/eng-deu/"
     ]
 }
