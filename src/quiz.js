@@ -188,7 +188,7 @@ function startQuiz(practiceWord) {
 
         // <br /> is equivalent to new line
         var prompt = document.createElement('p'); // prompt is a paragraph (<p> is paragraph tag)
-        prompt.innerHTML = 'Was ist der richtige Deutsche übersetzung von "' + practiceWord + '"?' +
+        prompt.innerHTML = 'Was ist die richtige deutsche Übersetzung von "' + practiceWord + '"?' +
           '<br>What is the correct German translation of "' + practiceWord + '"?';
         element.appendChild(prompt);
 
