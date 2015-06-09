@@ -2,9 +2,25 @@
 <html>
     <head>
         <title>The LANguage App</title>
+        <style>
+            body {
+                width: 400px;
+                background: linear-gradient(#92e0e5 0%, white 35%);
+            }
+
+            .danger {
+                color: red;
+            }
+        </style>
     </head>
     <body>
+        <h1>The LANguage App</h1>
         <p>Number of successfully answered quizzes: <span id="number"></span></p>
+        <p>Quiz accuracy: <span id="accuracy"></span></p>
+        <p>Total time spent answering quizzes: <span id="time"></span></p>
+        <p>Favorite words:</p>
+        <ul id="favorites"></ul>
+        <button id="reset" class="danger">Reset progress</button>
         <script src="popup.js"></script>
     </body>
 </html>

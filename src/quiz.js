@@ -2,27 +2,26 @@
 var mouseDown = false; // if mouse is currently clicked
 var mouseX = 0; // x value of mouse position when mouse is clicked (for dragging)
 var mouseY = 0; // y value of mouse position (same as above)
+var quizOpenTime;
 var translations = {}; // cache all translations on this page
 var remainingQuizzes; // number of remaining quizzes on page
 
 // Get translation from the translation server, and call the callback with error if there was any and the translated word as the parameter.
 // Called by getAnswersFromPage, *subFunct translateOneQuiz,
 function getTranslation(word, callback) {
-    // var request = new XMLHttpRequest();
-    // request.onload = function() {
-    //     if (request.status == 404) {
-    //         callback(true, null);
-    //     }
-    //     else {
-    //         var translation = JSON.parse(request.responseText)[0].text;
-    //         callback(false, translation);
-    //         translations[word] = translation;
-    //     }
-    // };
-    // request.open('GET', 'http://deu.hablaa.com/hs/translation/' + word + '/eng-deu/', true);
-    // request.send();
-    translations[word] = word;
-    callback(false, word);
+    var request = new XMLHttpRequest();
+    request.onload = function() {
+        if (request.status == 404) {
+            callback(true, null);
+        }
+        else {
+            var translation = JSON.parse(request.responseText)[0].text;
+            callback(false, translation);
+            translations[word] = translation;
+        }
+    };
+    request.open('GET', 'http://deu.hablaa.com/hs/translation/' + word + '/eng-deu/', true);
+    request.send();
 }
 
 // Called by startQuiz
@@ -208,7 +207,13 @@ function startQuiz(practiceWord) {
                         buttonContainer.style.display = 'none';
                         elt2.style.display = 'none';
                         elt.innerHTML = 'Congratulations, you got it right!';
-                        chrome.runtime.sendMessage({ type: 'incrementProgress' });
+                        chrome.runtime.sendMessage({ type: 'recordAttempt' });
+                        chrome.runtime.sendMessage({
+                            type: 'incrementProgress',
+                            word:  btn.innerHTML.toLowerCase(),
+                            time: Math.floor((performance.now() - quizOpenTime) / 1000)
+                        });
+                        quizOpenTime = performance.now();
                         remainingQuizzes--;
                         chrome.runtime.sendMessage({ type: 'setBadgeText', text: remainingQuizzes + '' });
                     }
@@ -223,6 +228,7 @@ function startQuiz(practiceWord) {
                         elt.innerHTML = "Aber jetzt wissen sie, dass " + btn.innerHTML + ' ' + wrd + ' bedeutet!' +
                           '<br>But now you know that ' + btn.innerHTML + ' means ' + wrd + "! Try again!";
                         btn.disabled = true;
+                        chrome.runtime.sendMessage({ type: 'recordAttempt' });
                     }
                 }(feedback, prompt, word, button); // calls itself immediately
             }
@@ -245,6 +251,7 @@ function startQuiz(practiceWord) {
         };
 
         element.appendChild(close); // adds 'Close quiz' button to the quiz window
+        quizOpenTime = performance.now();
     });
 }
 
