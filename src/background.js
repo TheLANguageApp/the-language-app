@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             tabId: sender.tab.id
         });
     }
-    if (request.type = 'incrementProgress') {
+    if (request.type == 'incrementProgress') {
         localStorage.quizzesSolved = JSON.parse(localStorage.quizzesSolved) + 1;
     }
 });
