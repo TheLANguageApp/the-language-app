@@ -1,23 +1,28 @@
 // Global Variables
+var mouseDown = false; // if mouse is currently clicked
+var mouseX = 0; // x value of mouse position when mouse is clicked (for dragging)
+var mouseY = 0; // y value of mouse position (same as above)
 var translations = {}; // cache all translations on this page
 var remainingQuizzes; // number of remaining quizzes on page
 
 // Get translation from the translation server, and call the callback with error if there was any and the translated word as the parameter.
 // Called by getAnswersFromPage, *subFunct translateOneQuiz,
 function getTranslation(word, callback) {
-    var request = new XMLHttpRequest();
-    request.onload = function() {
-        if (request.status == 404) {
-            callback(true, null);
-        }
-        else {
-            var translation = JSON.parse(request.responseText)[0].text;
-            callback(false, translation);
-            translations[word] = translation;
-        }
-    };
-    request.open('GET', 'http://deu.hablaa.com/hs/translation/' + word + '/eng-deu/', true);
-    request.send();
+    // var request = new XMLHttpRequest();
+    // request.onload = function() {
+    //     if (request.status == 404) {
+    //         callback(true, null);
+    //     }
+    //     else {
+    //         var translation = JSON.parse(request.responseText)[0].text;
+    //         callback(false, translation);
+    //         translations[word] = translation;
+    //     }
+    // };
+    // request.open('GET', 'http://deu.hablaa.com/hs/translation/' + word + '/eng-deu/', true);
+    // request.send();
+    translations[word] = word;
+    callback(false, word);
 }
 
 // Called by startQuiz
@@ -144,9 +149,36 @@ function highlightQuizCandidates(numQuizzes) {
 
 // practiceWord is just the highlighted word (i.e., the answer to the quiz)
 function startQuiz(practiceWord) {
-    console.log(practiceWord);
     var element = document.createElement('div'); // element is the quiz window
     element.classList.add('quiz-box');
+    element.style.left = '30px';
+    element.style.bottom = '30px';
+    element.onmousedown = function(elt) {
+        return function(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            e.preventDefault();
+            return false;
+        };
+    }(element);
+    element.onmousemove = function(elt) {
+        return function(e) {
+            displacementX = e.clientX - mouseX;
+            displacementY = e.clientY - mouseY;
+
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            if (mouseDown) {
+                elt.style.left = parseInt(elt.style.left) + displacementX + 'px';
+                elt.style.bottom = parseInt(elt.style.bottom) - displacementY + 'px';
+            }
+
+            e.preventDefault();
+            return false;
+        };
+    }(element)
     document.body.appendChild(element);
 
     element.innerHTML = 'Generating quiz...'; // prompt prior to fulfillment of start of quiz
@@ -186,10 +218,10 @@ function startQuiz(practiceWord) {
             else {
                 button.onclick = function(elt, elt2, wrd, btn) {
                     return function() {
-                        elt2.innerHTML = "Sorry, that was not correct <br /> Leider war das nicht rightig";
+                        elt2.innerHTML = "Sorry, that was not correct <br> Leider war das nicht rightig";
                         elt.innerHTML = "But now you know that " + btn.innerHTML + " means " + wrd
-                            + "<br /> Try again!" + "<br /> <br /> Aber jetzt wissen Sie, dass " + btn.innerHTML
-                            + "<br/ >" + wrd + " bedeutet! <br /> Versuchen Sie es erneut!";
+                            + "<br> Try again!<br><br> Aber jetzt wissen Sie, dass " + btn.innerHTML
+                            + "<br>" + wrd + " bedeutet! <br> Versuchen Sie es erneut!";
                         btn.disabled = true;
                     }
                 }(feedback, prompt, word, button); // calls itself immediately
@@ -209,5 +241,12 @@ function startQuiz(practiceWord) {
         element.appendChild(close); // adds 'Close quiz' button to the quiz window
     });
 }
+
+document.body.onmousedown = function() {
+    mouseDown = true;
+};
+document.body.onmouseup = function() {
+    mouseDown = false;
+};
 
 highlightQuizCandidates(5); // creates at most 5 quizzes
