@@ -144,7 +144,7 @@ function highlightQuizCandidates(numQuizzes) {
             attempts++;
         }
     }
-    translateOneQuiz(); // actual call to quiz-prep?
+    translateOneQuiz(); // actual call to quiz-prep? (starts the recursion)
 }
 
 // practiceWord is just the highlighted word (i.e., the answer to the quiz)
@@ -196,6 +196,8 @@ function startQuiz(practiceWord) {
 
         var feedback = document.createElement('p'); // dynamic feedback (correct/incorrect)
 
+        var buttonContainer = document.createElement('div');
+        element.appendChild(buttonContainer);
         for (var word in result) {
             var button = document.createElement('button');
             button.innerHTML = result[word];
@@ -226,7 +228,10 @@ function startQuiz(practiceWord) {
                     }
                 }(feedback, prompt, word, button); // calls itself immediately
             }
-            element.appendChild(button); // statement that adds all words to quiz (in/correct)
+            buttonContainer.appendChild(button); // statement that adds all words to quiz (in/correct)
+        }
+        for (var i = 0; i <= buttonContainer.children.length; i++) { // randomize the choices
+            buttonContainer.appendChild(buttonContainer.children[Math.random() * i | 0]);
         }
 
         element.appendChild(feedback); // adds the feedback prompt space to the quiz window
