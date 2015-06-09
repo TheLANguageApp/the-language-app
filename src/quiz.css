@@ -22,6 +22,6 @@ p{
     height: 250px;
     z-index: 999;
     position: fixed;
-    left: 0;
-    bottom: 0;
+    left: 30px;
+    bottom: 30px;
 }

@@ -1,0 +1,21 @@
+Called before the for(var word in result) in startQuiz
+
+
+function noRepeats(array) {
+            var copy = array.slice(0);
+            return function() {
+                if (copy.length < 1) { copy = array.slice(0); }
+                var index = Math.floor(Math.random() * copy.length);
+                var item = copy[index];
+                copy.splice(index, 1);
+                return item;
+            };
+        }
+
+        var randomPicked = noRepeats(result);
+
+        for (var callsMade = 0; callsMade < result.length; callsMade++){
+        //for (var word in result) {
+            var button = document.createElement('button');
+            button.innerHTML = randomPicked();
+            console.log(randomPicked());
