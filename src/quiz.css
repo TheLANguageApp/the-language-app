@@ -1,12 +1,3 @@
-.quiz p {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, sans-serif !important;
-	font-size: 14px !important;
-	font-style: normal !important;
-	font-variant: normal !important;
-	font-weight: 400 !important;
-	line-height: 20px !important;
-}
-
 .quiz {
     color: white;
     background: orangered;
@@ -15,12 +6,26 @@
 }
 
 .quiz-box {
-    background: rgba(0, 255, 255, 0.6);
-    padding: 40px 40px;
-    border: 2px solid black;
-    border-radius: 25px;
-    width: 350px;
-    height: 250px;
+    font-family: Helvetica, Arial, sans-serif;
+    background: linear-gradient(#92e0e5 0%, white 35%);
+    padding: 20px 20px;
+    border: 2px solid gray;
+    width: 480px;
+    height: 300px;
     z-index: 999;
+    font-size: 14px;
     position: fixed;
+}
+
+.quiz-box button {
+    font-size: 100%;
+    margin-right: 4px;
+    margin-top: 4px;
+}
+
+.quiz-box .close {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: red;
 }
