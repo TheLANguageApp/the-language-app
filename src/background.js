@@ -46,6 +46,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     if (request.type == 'resetProgress') {
         localStorage.quizzesSolved = 0;
+        localStorage.totalAttempts = 0;
         localStorage.totalTime = 0;
         localStorage.wordAmounts = '{}';
         sendResponse();

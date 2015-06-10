@@ -27,7 +27,7 @@ wordAmountsArray.sort(function(a, b) {
 
 for (var i = wordAmountsArray.length - 1; i >= 0 && i >= wordAmountsArray.length - 5; i--) {
     var li = document.createElement('li');
-    li.innerHTML = wordAmountsArray[i][0] + ' (' + wordAmountsArray[i][1] + ' successes)';
+    li.innerHTML = wordAmountsArray[i][0] + ' (' + wordAmountsArray[i][1] + (wordAmountsArray[i][i] > 1 ? ' successes' : ' success') + ')';
     document.getElementById('favorites').appendChild(li);
 }
 
