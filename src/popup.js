@@ -5,7 +5,7 @@ var hours = Math.floor(totalTime / 3600);
 var minutes = Math.floor((totalTime - (hours * 3600)) / 60);
 var seconds = totalTime % 60;
 
-var accuracy = Math.ceil(localStorage.quizzesSolved * 100 / localStorage.totalAttempts);
+var accuracy = Math.round(localStorage.quizzesSolved * 100 / localStorage.totalAttempts);
 if (isNaN(accuracy)) {
     document.getElementById('accuracy').innerHTML = 'N/A';
 }
