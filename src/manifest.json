@@ -3,7 +3,7 @@
 
     "name": "The LANguage App",
     "description": "A browser extension that allows people to learn vocabulary in a different language using fun quizzes.",
-    "version": "1.0",
+    "version": "1.0.1",
 
     "background": {
         "scripts": [
